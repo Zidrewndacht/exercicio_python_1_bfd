@@ -12,7 +12,7 @@
 - Uso de condicionais (`if/elif/else`), operadores aritméticos, lógicos e de comparação.
 - Uso de listas: criação, acesso, métodos e/ou comprehensions.
 - Entrada/saída com `input()`/`print()` e f-strings.
-- Código em um único arquivo, com capacidade de atingir ~200 linhas.
+- Código em um único arquivo.
 
 ---
 
@@ -243,21 +243,138 @@
 
 ---
 
-## Instruções Gerais para os Alunos
+## Tarefa 9: Sistema de Comandas de Restaurante
 
-1. **Leiam toda a especificação antes de começar.** Entendam o que cada opção do menu deve fazer.
-2. **Planejem juntos.** Discutam quais listas/variáveis serão necessárias e como organizar os dados antes de codificar.
-3. **Testem incrementalmente.** Implementem uma opção do menu, testem-na bem, e só depois passem para a próxima.
-4. **Usem funções.** Identifiquem trechos de código repetidos e transformem-nos em funções reutilizáveis.
-5. **Validem entradas.** O programa não deve quebrar se o usuário digitar texto onde se espera número, ou um índice que não existe. (Nota: sem `try/except`, usem condicionais e métodos de string para validar quando possível.)
-6. **Formatação importa.** Usem f-strings para deixar a saída legível e organizada.
-7. **Se terminarem cedo**, tentem implementar as tarefas bônus. Elas são desafiadoras e podem exigir raciocínio extra.
+**Contexto:** Um pequeno restaurante precisa de um sistema para gerenciar o cardápio, abrir comandas por mesa, adicionar pedidos, aplicar acréscimos ou descontos e fechar contas. O programa simula uma noite de atendimento.
+
+**Menu inicial (loop infinito até sair):**
+1. Cadastrar item no cardápio (nome, preço unitário, categoria: "Prato", "Bebida" ou "Sobremesa"; validar preço > 0 e categoria válida).
+2. Abrir nova comanda (informar número da mesa e nome do cliente; gerar automaticamente um número de comanda sequencial iniciando em 1).
+3. Adicionar item a uma comanda (informar número da comanda; listar cardápio com índices; escolher item pelo índice e informar quantidade; validar existência da comanda, se está aberta, e se quantidade > 0).
+4. Visualizar comanda (informar número; mostrar: cliente, mesa, lista de itens com quantidade/subtotal, total parcial; se comanda não existir ou estiver fechada, avisar).
+5. Aplicar desconto ou gorjeta (informar comanda; perguntar se é desconto ou gorjeta; informar percentual; desconto reduz o total, gorjeta aumenta; não permitir desconto ≥ 100%; mostrar valor anterior e valor final).
+6. Fechar comanda (informar número; calcular total final, mostrar resumo completo, marcar comanda como fechada; após fechada, não permitir adicionar itens nem aplicar novos descontos/gorjetas).
+7. Relatório da noite (listar todas as comandas fechadas: número, cliente, total; mostrar faturamento total; identificar o item mais vendido considerando todas as comandas; calcular média de gasto por comanda fechada).
+0. Sair.
+
+**Comportamento esperado:**
+- O cardápio deve ser armazenado de forma que cada item tenha nome, preço e categoria acessíveis. Como não há dicionários, o estudante deve escolher uma estrutura com listas (paralelas ou strings formatadas).
+- Cada comanda deve conter: número sequencial, mesa, cliente, status ("Aberta" ou "Fechada"), e os itens pedidos (referência ao cardápio + quantidade). A estrutura de armazenamento dos itens da comanda fica a critério do estudante, desde que funcione com listas.
+- A função de cálculo do total de uma comanda deve ser reutilizada nas opções 4, 5, 6 e 7.
+- A função de busca de comanda por número deve ser reutilizada em pelo menos 4 opções.
+- Na opção 7, para descobrir o item mais vendido, o programa deve percorrer todas as comandas fechadas, contar quantas vezes cada item do cardápio foi pedido (somando quantidades), e identificar o de maior quantidade total. Se houver empate, listar todos os empatados.
+- A média de gasto é o faturamento total dividido pelo número de comandas fechadas. Se não houver comandas fechadas, informar.
+- A formatação de moeda deve usar f-strings com 2 casas decimais (ex: R$ 45.90).
+
+**Tarefas bônus:**
+- B1. **Dividir comanda:** ao fechar, perguntar em quantas pessoas dividir. Calcular valor por pessoa. Se a divisão não for exata, a última pessoa paga o resto (centavos a mais) para garantir que a soma bata com o total.
+- B2. **Persistência:** ao escolher sair (opção 0), oferecer salvar o cardápio e as comandas fechadas em um arquivo texto (`open`, `write`). Ao reiniciar o programa, oferecer carregar os dados salvos (`open`, `read`). O formato do arquivo fica a critério do estudante (ex: uma linha por registro, campos separados por `|`).
+
+---
+
+## Tarefa 10: Gerenciador de Biblioteca Pessoal
+
+**Contexto:** Uma pessoa deseja organizar seus livros físicos, acompanhar o que já leu, o que está emprestado e obter estatísticas sobre seus hábitos de leitura.
+
+**Menu inicial:**
+1. Cadastrar livro (título, autor, ano de publicação, número de páginas, status inicial: "Não lido", "Lendo", "Lido" ou "Emprestado"; validar ano entre 1800 e 2030, páginas > 0).
+2. Listar acervo (mostrar índice, título, autor, ano, páginas, status; permitir ao usuário escolher ordenar por título alfabético ou por ano de publicação — a ordenação deve ser feita manualmente com loops, sem usar `.sort()` com chave).
+3. Buscar livro (por título parcial ou por autor parcial; case-insensitive; mostrar todos que atenderem ao critério).
+4. Alterar status de leitura (informar índice; mostrar status atual; permitir escolher novo status entre as 4 opções válidas; validar índice).
+5. Registrar empréstimo (informar índice do livro; registrar nome de quem pegou emprestado e data prevista de devolução; só permitir se o status atual for "Não lido" ou "Lido"; se já estiver "Emprestado", recusar).
+6. Registrar devolução (informar índice; alterar status para "Lido" e limpar dados do empréstimo).
+7. Estatísticas da biblioteca (total de livros; quantos em cada status; total de páginas dos livros marcados como "Lido"; autor com mais livros no acervo; ano com maior número de livros publicados no acervo).
+0. Sair.
+
+**Comportamento esperado:**
+- Cada livro possui: título, autor, ano, páginas, status, emprestado_para (string vazia se não emprestado), data_devolucao (string vazia se não emprestado). O estudante deve armazenar esses dados usando apenas listas (paralelas ou strings com separador).
+- A função de exibição de um livro (formatado com f-strings) deve ser reutilizada nas opções 2, 3, 5 e 6.
+- A função de busca por índice com validação deve ser reutilizada em pelo menos 3 opções.
+- A opção 2 deve implementar ordenação manual. Se o usuário escolher por título, comparar as strings com operadores `<`/`>` em um algoritmo de ordenação simples (bubble sort ou selection sort). Se escolher por ano, comparar os valores numéricos.
+- A opção 7 deve calcular: total de livros (tamanho da lista); contagem por status (loop contando cada um); páginas lidas (somar páginas onde status == "Lido"); autor mais presente (percorrer lista de autores, contar ocorrências de cada um, encontrar máximo — se empate, listar todos); ano com mais livros (similar ao autor).
+- Não permitir cadastro de livro com título vazio.
+
+**Tarefas bônus:**
+- B1. **Meta de leitura:** o usuário informa uma meta anual em número de páginas. O programa calcula quantas páginas já foram lidas este ano (considerando apenas livros com status "Lido" e ano de leitura informado pelo usuário, ou assumindo que todos "Lido" contam) e quantas faltam. Se a meta for atingida ou ultrapassada, exibir mensagem de parabéns.
+- B2. **Persistência:** salvar o acervo completo em um arquivo texto ao sair. Ao iniciar, oferecer carregar o arquivo. O estudante deve usar `open`, `read`, `write` e formatar os dados de forma que consiga reconstruir as listas ao ler (ex: um livro por linha, campos separados por `;`).
+
+---
+
+## Tarefa 11: Planejador de Viagem com Controle de Orçamento
+
+**Contexto:** Um grupo de amigos deseja planejar uma viagem de carro passando por várias cidades. O sistema deve ajudar a calcular custos de combustível, hospedagem, alimentação e verificar se o orçamento previsto é suficiente.
+
+**Menu inicial:**
+1. Cadastrar destino (cidade, distância desde a origem em km, dias de permanência, custo diário estimado de hospedagem, custo diário estimado de alimentação; validar distância ≥ 0, dias > 0, custos ≥ 0).
+2. Listar roteiro completo (mostrar ordem atual, cidade, km desde origem, dias, subtotal do destino = (hospedagem + alimentação) × dias).
+3. Calcular custo de combustível (solicitar preço do litro e consumo do veículo em km/l; calcular o trecho origem → 1º destino, 1º → 2º, 2º → 3º, etc., usando a diferença de distâncias; mostrar litros e custo por trecho; mostrar total de combustível da viagem).
+4. Orçamento total da viagem (somar: combustível total + soma dos subtotais de todos os destinos + valor de pedágios que o usuário informa; mostrar detalhado por categoria: combustível, hospedagem, alimentação, pedágios, total geral).
+5. Simular cenário alternativo (permitir ao usuário informar novo preço do litro, novo consumo do carro, ou novos custos diários; recalcular o orçamento total sem alterar os dados cadastrados, usando uma cópia dos valores; mostrar comparação: cenário original vs. cenário simulado).
+6. Otimizar rota por proximidade (reordenar os destinos manualmente por distância crescente desde a origem usando ordenação manual com loops; mostrar a nova ordem; recalcular o combustível para a nova ordem; comparar com o combustível da ordem original e mostrar a diferença — se economizou ou gastou mais).
+7. Verificar orçamento (usuário informa valor máximo disponível; comparar com o total da viagem; mostrar se está dentro do orçamento, quanto sobra ou falta; se faltar mais de 20%, sugerir reduzir dias no destino mais caro).
+0. Sair.
+
+**Comportamento esperado:**
+- Cada destino deve armazenar: cidade, distância, dias, diária_hospedagem, diária_alimentação. Estrutura via listas (paralelas ou strings formatadas).
+- A função de cálculo do subtotal de um destino deve ser reutilizada nas opções 2, 4, 5, 6 e 7.
+- A função de cálculo de combustível para um trecho (distância / consumo × preço) deve ser reutilizada nas opções 3, 4, 5 e 6.
+- A opção 3 deve usar um loop `for` para percorrer os destinos e calcular cada trecho consecutivo. Se houver apenas um destino, o trecho é da origem (km 0) até ele. Se não houver destinos, avisar.
+- A opção 5 deve criar uma cópia das listas de dados (usando `.copy()` ou similar) para simular sem alterar o cadastro original.
+- A opção 6 deve ordenar manualmente (ex: bubble sort) com base na distância desde a origem. Após ordenar, recalcular combustível total. Mostrar ordem antiga e nova, e a diferença de custo.
+- A opção 7 deve usar operadores aritméticos e de comparação para avaliar a viabilidade financeira. Se o déficit for > 20% do orçamento, identificar qual destino tem o maior custo diário combinado (hospedagem + alimentação) e sugerir reduzir um dia lá.
+- Todas as saídas devem usar f-strings com alinhamento para facilitar leitura.
+
+**Tarefas bônus:**
+- B1. **Checklist de viagem:** criar uma lista separada de itens a levar (máximo 20 itens). Permitir ao usuário adicionar itens, marcar como "conferido" (usando uma lista paralela de booleanos representados como strings "Sim"/"Não" ou inteiros 0/1), e mostrar o progresso (quantos % já foram conferidos).
+- B2. **Persistência e relatório:** salvar o roteiro completo e os cálculos em um arquivo texto ao sair. Criar uma opção extra no menu para "Gerar relatório de viagem" que salve um arquivo formatado com o roteiro, custos detalhados e dicas, sem sobrescrever o arquivo de dados.
+
+---
+
+## Tarefa 12: Controle de Frequência e Pagamento de Pequena Equipe
+
+**Contexto:** Um pequeno comércio precisa controlar os pontos dos funcionários durante a semana, calcular pagamentos proporcionais com horas extras, e montar a escala da semana seguinte.
+
+**Menu inicial:**
+1. Cadastrar funcionário (nome, cargo, valor da hora de trabalho, carga horária semanal contratual em horas; validar valor > 0 e carga > 0).
+2. Registrar ponto do dia (informar funcionário por índice ou nome, dia da semana — aceitar: "segunda", "terça", "quarta", "quinta", "sexta", "sábado", "domingo" — e horas trabalhadas naquele dia; validar horas entre 0 e 24; padronizar o nome do dia; acumular na semana do funcionário).
+3. Visualizar semana do funcionário (informar funcionário; mostrar dia a dia as horas registradas — segunda a domingo —, total da semana, carga contratual, diferença em horas: positivo se excedeu, negativo se faltou, zero se igual; usar f-strings alinhadas).
+4. Fechar semana e calcular pagamento (informar funcionário; calcular: horas normais pagas = mínimo entre total trabalhado e carga contratual, multiplicado pelo valor hora; horas extras = máximo de 0 e (total - carga), multiplicado por valor hora × 1.5; mostrar valor bruto total, detalhando normais e extras; se trabalhou menos que a carga, pagar apenas pelo que trabalhou — sem valores negativos).
+5. Montar escala da próxima semana (para cada dia da semana, o usuário informa quais funcionários trabalharão naquele dia, informando índices; o programa deve validar que nenhum funcionário seja escalado mais vezes do que um limite máximo informado pelo usuário no início; mostrar a escala completa formatada: dia + lista de nomes).
+6. Relatório geral da equipe (listar todos os funcionários; mostrar nome, total de horas da semana atual, valor a receber (usar a lógica da opção 4), status ("Carga OK", "Extras", "Abaixo da carga"); identificar funcionário com mais horas e com menos horas na semana; calcular folha total de pagamento da equipe).
+7. Iniciar nova semana (zerar todas as horas registradas de todos os funcionários; pedir confirmação "S"/"N"; manter os cadastros de funcionários intactos).
+0. Sair.
+
+**Comportamento esperado:**
+- Cada funcionário possui: nome, cargo, valor_hora, carga_semanal, e uma lista de 7 posições representando as horas de segunda a domingo (inicializar com 0). O estudante deve armazenar isso usando apenas listas (paralelas ou strings formatadas).
+- A função de busca de funcionário (por índice ou nome, com validação) deve ser reutilizada nas opções 2, 3, 4, 6 e 7.
+- A função de cálculo de total de horas da semana de um funcionário (somando as 7 posições) deve ser reutilizada em pelo menos 4 opções.
+- A opção 3 deve usar `for` com `range(7)` para iterar sobre os dias da semana, mostrando o nome do dia e as horas correspondentes.
+- A opção 5 deve construir uma estrutura de escala (ex: 7 listas, uma para cada dia). Para cada dia, o usuário digita índices separados por vírgula (ou um por vez até digitar "fim"). O programa deve verificar, após cada inclusão, se o funcionário já atingiu o limite de dias na semana. Se sim, recusar e avisar. A escala deve poder ser visualizada após montada.
+- A opção 6 deve iterar sobre todos os funcionários, acumular a folha total, e usar loops para encontrar o maior e menor total de horas. Se houver empate no maior ou menor, listar todos os empatados.
+- A opção 4 deve garantir que o pagamento nunca seja negativo: se trabalhou 0 horas, recebe 0.
+- A formatação deve alinhar colunas usando f-strings para criar uma visualização tipo tabela simples.
+
+**Tarefas bônus:**
+- B1. **Recibo simplificado:** criar uma opção extra para gerar um "recibo" textual para um funcionário selecionado, usando caracteres ASCII para formar uma caixa (`+`, `-`, `|`). O recibo deve conter nome, cargo, horas normais, horas extras, valor hora, valor normal, valor extra, total bruto. Exibir na tela e oferecer salvar em arquivo texto.
+- B2. **Persistência completa:** salvar todos os funcionários, suas horas da semana e a escala montada em um arquivo ao sair. Ao reiniciar, carregar automaticamente. O estudante deve usar recursos nativos de arquivo da linguagem (`open`, `read`, `write`) e formatar os dados de forma recuperável.
+
+---
+
+## Instruções Gerais para os Alunos:
+
+1. **Leiam toda a especificação antes de começar.** Entendam o fluxo do menu e o que cada opção precisa entregar.
+2. **Desenhem a estrutura de dados em papel.** Decidam como vão armazenar informações relacionadas usando apenas listas e variáveis primitivas.
+3. **Implementem por partes.** Façam uma opção do menu, testem exaustivamente, depois passem para a próxima.
+4. **Reutilizem código.** Trechos que aparecem em mais de um lugar devem virar funções.
+5. **Tratem entradas inválidas.** Mesmo sem `try/except`, verifiquem se índices existem, se números são positivos, se strings não estão vazias.
+6. **Deixem a saída legível.** Usem f-strings com larguras fixas (`{valor:>10.2f}`) para criar "tabelas" no terminal.
+7. **Bônus são opcionais mas desafiadores.** Se terminarem a tarefa principal com antecedência, tentem as bônus — especialmente as de persistência, que exigirão pesquisa sobre manipulação de arquivos em Python.
 
 **Critérios de avaliação sugeridos:**
-- Funcionalidade: o programa faz o que foi pedido?
-- Organização: uso adequado de funções e repetição de código mínima.
-- Validação: o programa lida bem com entradas inesperadas?
-- Clareza: nomes de variáveis e funções são significativos?
-- Colaboração: ambos os membros da dupla participaram?
+- Funcionalidade: todas as opções do menu funcionam conforme especificado?
+- Estrutura: funções estão bem definidas e reutilizadas?
+- Robustez: o programa lida com entradas erradas sem travar?
+- Clareza: nomes de variáveis e funções são descritivos?
+- Colaboração: ambos os membros da dupla contribuíram ativamente?
 
 Bom trabalho!
